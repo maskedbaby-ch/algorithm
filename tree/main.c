@@ -68,10 +68,91 @@ struct treeNode *RootLR(struct treeNode *root) {
 		return root;
 	}
 	if (root) {
-		printf("%d\n", root->val);
+		printf("%d ", root->val);
 	}
 	RootLR(root->left);
 	RootLR(root->right);
+}
+
+struct treeNode *find_val(struct treeNode *root, int val) {
+	struct treeNode *tmp = root;
+	while(tmp) {
+		if(val < tmp->val) {
+			tmp = tmp->left;
+		} else if (val > tmp->val) {
+			tmp = tmp->right;
+		} else {
+			return tmp;
+		}
+	}
+}
+
+struct treeNode *find_val_of_parent(struct treeNode *root, int val) {
+	if (root == NULL || root->val == val) {
+		return NULL;
+	}
+	struct treeNode *tmp = root;
+	struct treeNode *parent;
+	while(tmp) {
+		if(val < tmp->val) {
+			parent = tmp;
+			tmp = tmp->left;
+		} else if (val > tmp->val) {
+			parent = tmp;
+			tmp = tmp->right;
+		} else {
+			return parent;
+		}
+	}
+}
+
+// del the val
+int del_tree_node(struct treeNode *root, int val) {
+	struct treeNode *node = find_val(root, val);
+	if ((node->left == NULL) && (node->right == NULL)) {
+		struct treeNode *parent_node = find_val_of_parent(root, val);
+		if (parent_node) {
+			if (parent_node->left == node) {
+				free(parent_node->left);
+				parent_node->left = NULL;
+			} else {
+				free(parent_node->right);
+				parent_node->right = NULL;
+			}
+		}
+		return 0;
+	}
+	
+	if (node->left && node->right) {
+		struct treeNode *parent_node = find_val_of_parent(root, val);
+		struct treeNode *left = node->left;
+		struct treeNode *right = node->right;
+
+		if (parent_node->left == node) {
+			parent_node->left = NULL;
+		} else {
+			parent_node->right = NULL;
+		}
+		insertNodeByValue(root, left);
+		insertNodeByValue(root, right);
+		free(node);	
+		return 0;
+	}
+
+	if (node->left || node->right) {
+		struct treeNode *parent_node = find_val_of_parent(root, val);
+		struct treeNode *tmp = node->left != NULL ? node->left: node->right;
+
+		if (parent_node->left == node) {
+			parent_node->left = NULL;
+		} else {
+			parent_node->right = NULL;
+		}
+		free(node);	
+		insertNodeByValue(root, tmp);
+	}
+	
+	return 0;
 }
 
 int main()
@@ -85,7 +166,14 @@ int main()
 	insertNodeByValue(root, node2);
 	insertNodeByValue(root, node3);
 	insertNodeByValue(root, node4);
+	insertNodeByValue(root, tree_node_init(0));
 	RootLR(root);
+	printf("\n");
+//	del_tree_node(root, 17);
+	del_tree_node(root, 18);
+//	del_tree_node(root, 2);
+	RootLR(root);
+	printf("\n");
 	free_all_node(root);
 #if 0
 	freeTreeNode(root);
