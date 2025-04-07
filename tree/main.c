@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stddef.h>
 #include <stdlib.h>
-
+// BST
 struct treeNode {
 	int val;
 	struct treeNode* left;
@@ -158,14 +158,10 @@ int del_tree_node(struct treeNode *root, int val) {
 int main()
 {
 	struct treeNode *root = tree_node_init(12);
-	struct treeNode *node1 = tree_node_init(1);
-	struct treeNode *node2 = tree_node_init(18);
-	struct treeNode *node3 = tree_node_init(17);
-	struct treeNode *node4 = tree_node_init(2);
-	insertNodeByValue(root, node1);
-	insertNodeByValue(root, node2);
-	insertNodeByValue(root, node3);
-	insertNodeByValue(root, node4);
+	insertNodeByValue(root, tree_node_init(1));
+	insertNodeByValue(root, tree_node_init(18));
+	insertNodeByValue(root, tree_node_init(17));
+	insertNodeByValue(root, tree_node_init(2));
 	insertNodeByValue(root, tree_node_init(0));
 	RootLR(root);
 	printf("\n");
